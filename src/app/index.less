@@ -9,8 +9,6 @@
  *  If you want to override some bootstrap variables, you have to change values here.
  *  The list of variables are listed here bower_components/bootstrap/less/variables.less
  */
-
-@import "mixins.less";
 @navbar-inverse-link-color: #5AADBB;
 @icon-font-path: '../../bower_components/bootstrap/fonts/';
 
@@ -37,18 +35,39 @@
 // endinjector
 
 
+.button-group {
+  margin: 20px 0;
+}
 
-.notes-page {
+video{
+  transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
+
+.cool-bordered {
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #C8C7C7;
+}
+
+.new-note-area {
+  padding: 0 5%;
   #images-container {
     text-align: left;
   }
 
   #video {
-    width: 400px;
-    height: 200px;
+    width: 70%;
+    height: 50%;
+    margin: 20px auto;
+    text-align: center;
+    display: block;
   }
 
-  #canvas {
+  .dummy-canvas {
     position: absolute;
     visibility: hidden;
   }
@@ -88,7 +107,14 @@
     background-repeat: no-repeat;
     background-position: center;
   }
+
+  .make-photos-section {
+    border: 1px solid #e4e4e4;
+    padding: 15px;
+    border-radius: 8px;
+  }
 }
+
 
 .existed-notes-area {
   .existed-note {

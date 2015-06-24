@@ -33,11 +33,11 @@
       };
 
       $scope.startNoteCreation = function () {
-        navigator.geolocation.getCurrentPosition(function (data) {
+/*        navigator.geolocation.getCurrentPosition(function (data) {
           $scope.noteIsBeingCreated = true;
-        }, function(err) {
+        }, function(err) {*/
           $scope.noteIsBeingCreated = true;
-        });
+        /*});*/
       };
 
       $scope.stopNewNoteCreation = function () {
@@ -77,6 +77,11 @@
 
 
           $scope.newNote.images.push({src: canvas.toDataURL()});
+      };
+
+      $scope.cancelPhotosMake = function () {
+        $scope.newNote.images = [];
+        $scope.isAddPhotosViewVisible = false;
       };
 
       $scope.removeImage = function (img) {

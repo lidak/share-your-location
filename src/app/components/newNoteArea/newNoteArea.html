@@ -1,14 +1,22 @@
-<div class="new-note-area">
+<div class="new-note-area form-group">
   <h3>Create your note!</h3>
-  <input type="button" value="Create new note on your current location!" ng-click="startNoteCreation()" ng-show="!noteIsBeingCreated">
+  <input type="button" value="Create new note on your current location!" ng-click="startNoteCreation()" ng-show="!noteIsBeingCreated" class="btn btn-primary btn-lg btn-block">
   <form action="" ng-show="noteIsBeingCreated">
-    <input type="text" name="title" ng-model="newNote.title" placeholder="Note's title"><br>
-    <textarea ng-model="newNote.textContent" placeholder="Note's text"></textarea>
-    <input type="button" ng-click="startVideo()" value="Add photo to article"  ng-if="!isAddPhotosViewVisible">
-    <div class="addPhotosView" ng-show="isAddPhotosViewVisible">
-      <video id="video" autoplay></video>
-      <canvas id="canvas"></canvas>
-      <input type="button" ng-click="makePhoto()" value="Make a photo">
+    <div class="form-group">
+      <label for="new-note-title">Note's title</label>
+      <input type="text" ng-model="newNote.title" placeholder="Note's title" class="form-control" class="form-control" id="new-note-title">
+    </div>
+    <div class="form-group">
+      <label for="new-note-text">Note's text</label>
+      <textarea ng-model="newNote.textContent" placeholder="Note's text"  class="form-control" id="new-note-text"></textarea>
+    </div>
+    <input type="button" ng-click="startVideo()" value="Add photo to article" class="btn btn-primary btn-block" ng-if="!isAddPhotosViewVisible">
+    <div ng-show="isAddPhotosViewVisible" class="make-photos-section">
+      <h4>Add some photos to make your note cool!</h4>
+      <video id="video" autoplay class="cool-bordered"></video>
+      <canvas id="canvas" class="dummy-canvas"></canvas>
+      <input type="button" ng-click="makePhoto()" value="Make a photo" class="btn btn-default">
+      <input type="button" ng-click="cancelPhotosMake()" value="It's cool enough vithout photos" class="btn btn-default">
       <div id="images-container">
         <div class="new-note-image-container" ng-repeat="img in newNote.images">
           <div class="new-note-image" style="background-image: url({{ img.src }});"></div>
@@ -16,7 +24,9 @@
         </div>
       </div>
     </div>
-    <input type="button" value="Create" ng-click="createNewNote()">
-    <input type="button" value="Cancel" ng-click="stopNewNoteCreation()">
+    <div class="button-group">
+      <input type="button" value="Create" ng-click="createNewNote()" class="btn btn-default">
+      <input type="button" value="Cancel" ng-click="stopNewNoteCreation()" class="btn btn-default">
+    </div>
   </form>
 </div>
