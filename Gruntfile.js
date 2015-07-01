@@ -21,7 +21,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      files: ['src/app/components/**/newNoteArea.less', 'src/app/styles/style.less'],
+      files: ['src/app/components/**/newNoteArea.less', 'src/app/styles/*.less'],
       tasks: 'less',
       options: {
         nospawn: true

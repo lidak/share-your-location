@@ -1,7 +1,10 @@
 'use strict';
 
-var giant = angular.module('giant', []);
+var giant = angular.module('giant', ['uiGmapgoogle-maps']);
 
-giant.controller('FirstController', ['$scope', function ($scope) {
-  $scope.test = 5;
-}]);
+/*giant
+  .config(['uiGmapGoogleMapApiProvider', function(GoogleMapApiProvider) {
+        GoogleMapApiProvider.configure({
+            china: true
+        });
+    }]);*/
