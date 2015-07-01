@@ -16,10 +16,10 @@
       <video id="video" autoplay class="cool-bordered"></video>
       <canvas id="canvas" class="dummy-canvas"></canvas>
       <input type="button" ng-click="makePhoto()" value="Make a photo" class="btn btn-default">
-      <input type="button" ng-click="cancelPhotosMake()" value="It's cool enough vithout photos" class="btn btn-default">
+      <input type="button" ng-click="cancelPhotosMake()" value="Don't add photos" class="btn btn-default">
       <div id="images-container">
         <div class="new-note-image-container" ng-repeat="img in newNote.images">
-          <div class="new-note-image" style="background-image: url({{ img.src }});"></div>
+          <img class="new-note-image cool-bordered" src="{{ img.src }}">
           <div class="delete-image glyphicon-remove glyphicon" ng-click="removeImage(img)"></div>
         </div>
       </div>

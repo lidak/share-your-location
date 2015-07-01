@@ -18,6 +18,14 @@
 
     /** @ngInject */
     function NewNoteController($scope) {
+      var streamObj;
+
+      function stopStream () {
+        if (streamObj.active) {
+          streamObj.stop();
+        }
+      }
+
       $scope.newNote = {
         title: '',
         images: [],
@@ -27,17 +35,15 @@
       $scope.isAddPhotosViewVisible = false;
       $scope.noteIsBeingCreated = false;
 
-      $scope.addNote = function (note) {
-        note.date = Date.now();
-        $scope.notes.push(note);
-      };
-
       $scope.startNoteCreation = function () {
-/*        navigator.geolocation.getCurrentPosition(function (data) {
-          $scope.noteIsBeingCreated = true;
-        }, function(err) {*/
-          $scope.noteIsBeingCreated = true;
-        /*});*/
+        navigator.geolocation.getCurrentPosition(function (location) {
+          $scope.newNote.location = location;
+          $scope.$apply(function () {
+            $scope.noteIsBeingCreated = true;
+          });
+        }, function(err) {
+          $scope.noteIsBeingCreated = false;
+        });
       };
 
       $scope.stopNewNoteCreation = function () {
@@ -49,7 +55,9 @@
 
         $scope.isAddPhotosViewVisible = false;
         $scope.noteIsBeingCreated = false;
-      };  
+
+        stopStream();
+      };
 
       $scope.startVideo = function() {
         var video = document.getElementById('video');
@@ -57,6 +65,7 @@
         navigator.webkitGetUserMedia({
           video: true
         }, function (stream) {
+          streamObj = stream;
           $scope.$apply(function() {
             $scope.isAddPhotosViewVisible = true;
             $scope.videoStreamUrl = URL.createObjectURL(stream);
@@ -82,6 +91,8 @@
       $scope.cancelPhotosMake = function () {
         $scope.newNote.images = [];
         $scope.isAddPhotosViewVisible = false;
+
+        stopStream();
       };
 
       $scope.removeImage = function (img) {
@@ -90,6 +101,7 @@
       };
 
       $scope.createNewNote = function () {
+        $scope.newNote.date = Date.now();
         $scope.notes.push($scope.newNote);
         $scope.stopNewNoteCreation();
       };
