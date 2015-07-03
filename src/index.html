@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="giant">
-<head>
-  <meta charset="UTF-8">
-  <title>Giant</title>
-</head>
-<body ng-controller="MainController">
-  <new-note-area></new-note-area>
-  <ui-gmap-google-map center='map.center' zoom='map.zoom' ng-show="map.center"></ui-gmap-google-map>
-</body>
-<link rel="stylesheet" href="app/styles/style.css">
-<!--Libraries-->
-<script src="libs/node_modules/angular/angular.js"></script>
-<script src="libs/node_modules/lodash/index.js"></script>
-<script src='//maps.googleapis.com/maps/api/js?sensor=false?key=AIzaSyAoTh8SGqwiudkX5erYasWSUezZVHgT66I'></script>
-<script src="libs/node_modules/angular-google-maps/dist/angular-google-maps.min.js"></script>
-<!--App scripts-->
-<script src="app/app.js"></script>
-<script src="app/filters/filters.js"></script>
-<script src="app/components/main/mainController.js"></script>
-<script src="app/components/newNoteArea/newNoteArea.directive.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <title>Giant</title>
+  </head>
+  <body ng-controller="MainController">
+    <new-note-area></new-note-area>
+  </body>
+  <link rel="stylesheet" href="app/styles/style.css">
+  <!--Libraries-->
+  <script src="libs/node_modules/angular/angular.js"></script>
+  <script src="libs/node_modules/lodash/index.js"></script>
+  <script src='//maps.googleapis.com/maps/api/js?sensor=false?key=AIzaSyAoTh8SGqwiudkX5erYasWSUezZVHgT66I'></script>
+  <script src="libs/node_modules/angular-google-maps/dist/angular-google-maps.min.js"></script>
+  <!--App scripts-->
+  <script src="app/app.js"></script>
+  <script src="app/filters/filters.js"></script>
+  <script src="app/components/main/mainController.js"></script>
+  <script src="app/components/newNoteArea/newNoteArea.directive.js"></script>
 </html>

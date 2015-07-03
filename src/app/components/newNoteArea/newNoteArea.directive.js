@@ -29,18 +29,45 @@
       $scope.newNote = {
         title: '',
         images: [],
-        textContent: ''
+        textContent: '',
+        coords: {
+          latitude: 50,
+          longitude: 20
+        }
       };
 
       $scope.isAddPhotosViewVisible = false;
       $scope.noteIsBeingCreated = false;
 
       $scope.videoStreamUrl = '';
+      $scope.map = {
+        center: $scope.newNote.coords,
+        zoom: 12,
+        markers: $scope.notes, // array of models to display
+        markersEvents: {
+    /*        click: function(marker, eventName, model, arguments) {
+            $scope.map.window.model = model;
+            $scope.map.window.show = true;
+          }*/
+        },
+        window: {
+            marker: {id:4},
+            show: true,
+            closeClick: function() {
+              this.show = false;
+            },
+            options: {} // define when map is ready
+        }
+      };
 
       $scope.startNoteCreation = function () {
         navigator.geolocation.getCurrentPosition(function (location) {
-          $scope.newNote.location = location;
           $scope.$apply(function () {
+            $scope.newNote.coords = {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude
+            };
+            $scope.newNote.bid = 4;
             $scope.noteIsBeingCreated = true;
           });
         }, function(err) {
@@ -101,10 +128,10 @@
 
       $scope.createNewNote = function () {
         $scope.newNote.date = Date.now();
+        $scope.newNote.show = true;
         $scope.notes.push($scope.newNote);
         $scope.stopNewNoteCreation();
       };
     }
   }
-
 })();
