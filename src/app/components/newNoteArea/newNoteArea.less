@@ -50,11 +50,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
+    .flipped();
   }
 
   .make-photos-section {
@@ -72,5 +68,10 @@
     width: 60px;
     float: left;
     margin-right: 10px;
+    .flipped();
+  }
+
+  .notes-map-wrapper {
+    margin-top: 20px;
   }
 }
