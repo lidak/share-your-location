@@ -21,7 +21,7 @@
       var streamObj;
 
       function stopStream () {
-        if (streamObj.active) {
+        if (streamObj && streamObj.active) {
           streamObj.stop();
         }
       }
@@ -34,6 +34,8 @@
 
       $scope.isAddPhotosViewVisible = false;
       $scope.noteIsBeingCreated = false;
+
+      $scope.videoStreamUrl = '';
 
       $scope.startNoteCreation = function () {
         navigator.geolocation.getCurrentPosition(function (location) {
@@ -60,8 +62,6 @@
       };
 
       $scope.startVideo = function() {
-        var video = document.getElementById('video');
-
         navigator.webkitGetUserMedia({
           video: true
         }, function (stream) {
@@ -70,7 +70,6 @@
             $scope.isAddPhotosViewVisible = true;
             $scope.videoStreamUrl = URL.createObjectURL(stream);
           });
-          video.setAttribute('src', $scope.videoStreamUrl);
         }, function () {
 
         });

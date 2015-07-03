@@ -1,3 +1,5 @@
+@photo-height: 142px;
+@photo-width: 200px;
 .new-note-area {
   padding: 0 5%;
   text-align: left;
@@ -16,8 +18,8 @@
   }
 
   .new-note-image-container {
-    width: 200px;
-    height: 100px;
+    width: @photo-width;
+    height: @photo-height;
     display: inline-block;
     margin: 10px;
     position: relative;
@@ -37,11 +39,14 @@
     background-color: rgba(0,0,0,0.5);
     display: none;
     color: #fff;
+    &::before {
+      line-height: 138px;
+    }
   }
 
   .new-note-image {
-    width: 200px;
-    height: 100px;
+    width: @photo-width;
+    height: @photo-height;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

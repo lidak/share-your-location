@@ -13,7 +13,7 @@
     <input type="button" ng-click="startVideo()" value="Add photo to article" class="btn btn-primary btn-block" ng-if="!isAddPhotosViewVisible">
     <div ng-show="isAddPhotosViewVisible" class="make-photos-section">
       <h4>Add some photos to make your note cool!</h4>
-      <video id="video" autoplay class="cool-bordered"></video>
+      <video id="video" autoplay class="cool-bordered" ng-src="{{ videoStreamUrl | trustedSrc }}"></video>
       <canvas id="canvas" class="dummy-canvas"></canvas>
       <input type="button" ng-click="makePhoto()" value="Make a photo" class="btn btn-default">
       <input type="button" ng-click="cancelPhotosMake()" value="Don't add photos" class="btn btn-default">
