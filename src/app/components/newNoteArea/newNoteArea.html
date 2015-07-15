@@ -31,8 +31,8 @@
   </form>
   <div class="notes-map-wrapper">
     <ui-gmap-google-map center="map.center" zoom="map.zoom">
-      <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="map2.onMarkerClick(m)" idkey="m.bid">
-          <ui-gmap-window show="m.show" ng-cloak>
+      <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="redirectToNotePage(m)" idkey="m.bid">
+          <ui-gmap-window show="m.show" ng-click="redirectToNotePage(m)">
               <p>
                   <img ng-src="{{ m.images[0].src }}" alt="" class="tooltip-img">
                   Title: {{m.title}}<br/>

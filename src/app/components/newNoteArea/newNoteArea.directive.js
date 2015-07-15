@@ -33,7 +33,8 @@
         coords: {
           latitude: 50,
           longitude: 20
-        }
+        },
+        date: ''
       };
 
       $scope.isAddPhotosViewVisible = false;
@@ -45,10 +46,9 @@
         zoom: 12,
         markers: $scope.notes, // array of models to display
         markersEvents: {
-    /*        click: function(marker, eventName, model, arguments) {
-            $scope.map.window.model = model;
-            $scope.map.window.show = true;
-          }*/
+          click: function() {
+            debugger;
+          }
         },
         window: {
             marker: {id:4},
@@ -132,6 +132,10 @@
         $scope.notes.push($scope.newNote);
         $scope.stopNewNoteCreation();
       };
+
+      $scope.redirectToNotePage = function () {
+        debugger
+      }
     }
   }
 })();

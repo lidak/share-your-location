@@ -5,6 +5,20 @@
     <title>Giant</title>
   </head>
   <body ng-controller="MainController">
+    <header class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <form class="navbar-form navbar-right">
+          <div class="form-group">
+            <input type="text" placeholder="Email" class="form-control" ng-model="user.username">
+          </div>
+          <div class="form-group">
+            <input type="password" placeholder="Password" class="form-control" ng-model="user.password">
+          </div>
+          <button type="submit" class="btn btn-success" ng-click="login()">Log in</button>
+          <button type="submit" class="btn btn-success">Sign up</button>
+        </form>
+      </div>
+    </header>
     <new-note-area></new-note-area>
   </body>
   <link rel="stylesheet" href="app/styles/style.css">
