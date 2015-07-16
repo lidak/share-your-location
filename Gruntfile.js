@@ -2,12 +2,12 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    connect: {
+    /*connect: {
       example: {
         port: 1337,
         base: 'src'
       }
-    },
+    },*/
     less: {
       development: {
         options: {
@@ -33,5 +33,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['connect:example']);
+  grunt.registerTask('default', []);
 };

@@ -1,0 +1,7 @@
+{
+  "globals": {
+    "angular": true,
+    "require": true,
+    "__dirname": true
+  }
+}

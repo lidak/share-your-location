@@ -9,13 +9,13 @@
       <div class="container">
         <form class="navbar-form navbar-right">
           <div class="form-group">
-            <input type="text" placeholder="Email" class="form-control" ng-model="user.username">
+            <input type="text" placeholder="Email" class="form-control" ng-model="userAuthData.userName">
           </div>
           <div class="form-group">
-            <input type="password" placeholder="Password" class="form-control" ng-model="user.password">
+            <input type="password" placeholder="Password" class="form-control" ng-model="userAuthData.password">
           </div>
-          <button type="submit" class="btn btn-success" ng-click="login()">Log in</button>
-          <button type="submit" class="btn btn-success">Sign up</button>
+          <button type="submit" class="btn btn-success" ng-click="logIn()">Log in</button>
+          <button type="submit" class="btn btn-success" ng-click="signUp()">Sign up</button>
         </form>
       </div>
     </header>
@@ -27,6 +27,7 @@
   <script src="libs/node_modules/lodash/index.js"></script>
   <script src='//maps.googleapis.com/maps/api/js?sensor=false?key=AIzaSyAoTh8SGqwiudkX5erYasWSUezZVHgT66I'></script>
   <script src="libs/node_modules/angular-google-maps/dist/angular-google-maps.min.js"></script>
+  <script src="libs/node_modules/ng-dialog/js/ngDialog.min.js"></script>
   <!--App scripts-->
   <script src="app/app.js"></script>
   <script src="app/filters/filters.js"></script>
