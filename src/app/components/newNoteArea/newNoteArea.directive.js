@@ -47,7 +47,7 @@ function newNoteArea() {
         $http
           .get('/getNotes/' + ($rootScope.user._id))
           .then(function (response) {
-            $rootScope.notes = response.data;
+            $scope.notes = response.data;
             $scope.map = {
               center: $scope.newNote.coords,
               zoom: 12,
@@ -66,7 +66,7 @@ function newNoteArea() {
           };
         });
       } else {
-        $rootScope.notes = [];
+        $scope.notes = [];
         $scope.map = null;
       }
     });

@@ -7,7 +7,8 @@ var express = require('express'),
   parser = require('body-parser');
 
 app.use(express.static(__dirname + '/src'));
-app.use(parser.json());
+app.use(parser.json({limit: '50mb'}));
+app.use(parser.urlencoded({limit: '50mb', extended: true}));
 
 app.post('/auth', function (req, res) {
   db.users.findOne({userName: req.body.userName}, function (err, doc) {
@@ -53,15 +54,32 @@ app.post('/register', function (req, res) {
 });
 
 
-app.post('/createNote/:_id', function (req, res) {
-  var id = req.params._id;
+app.post('/createNote/:userId', function (req, res) {
+  var id = req.params.userId;
 
-  db.notes.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
+  db.notes.findOne({userId: id}, function (err, doc) {
     if (!doc) {
       db.notes.insert({
-        _id: mongojs.ObjectId(id),
+        userId: id,
         notes: [req.body]
       }, function (err, doc) {
+        if (err) {
+          res.status(500).send('Server error.');
+          return;
+        }
+
+        res.json(doc);
+      });
+    } else {
+      var newNotes = doc.notes.push(req.body);
+      db.notes.update({
+        userId: id
+      }, {
+        $push: {
+          'notes': req.body
+        }
+      },
+      function (err, doc) {
         if (err) {
           res.status(500).send('Server error.');
           return;
@@ -78,11 +96,17 @@ app.post('/createNote/:_id', function (req, res) {
   });
 });
 
-app.get('/getNotes/:_id', function (req, res) {
-  var id = req.params._id;
-  db.notes.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
-    if(!err) {
+app.get('/getNotes/:userId', function (req, res) {
+  var id = req.params.userId;
+  db.notes.findOne({userId: id}, function (err, doc) {
+    if (err) {
+      res.status(500).send('Server error.');
+      return;
+    }
+    if (doc) {
       res.json(doc.notes);
+    } else {
+      res.json([]);
     }
   });
 });
