@@ -3,66 +3,68 @@
 angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$http', 'ngDialog', function($rootScope, $scope, $http, ngDialog) {
   $scope.notes = [];
   $scope.userAuthData = {};
+  $rootScope.user = JSON.parse(sessionStorage.giantAppUser || '{}');
 
   $scope.logIn = function () {
     $http.post('/auth', $scope.userAuthData).then(
       function (user) {
-        $rootScope.user = user;
+        setUserObject(user.data);
 
-        ngDialog.open({
-          template: 'app/views/dialogTemplate.html',
-          className: 'ngdialog-theme-default',
-          overlay: true,
-          closeByEscape: true,
-          data: {
+        openDialog({
             headline: 'Success',
-            message: 'You has been successfully logged in'
-          }
+            message: 'You have been successfully logged in'
         });
       },
       function (err) {
-        ngDialog.open({
-          template: 'app/views/dialogTemplate.html',
-          className: 'ngdialog-theme-default',
-          overlay: true,
-          closeByEscape: true,
-          data: {
+        openDialog({
             headline: 'Login failed',
             message: err.data
-          }
         });
       }
     );
+  };
+
+  $scope.logOut = function () {
+    setUserObject({});
   };
 
   $scope.signUp = function () {
     $http.post('/register', $scope.userAuthData).then(
       function (user) {
-        $rootScope.user = user;
+        setUserObject(user.data);
 
-        ngDialog.open({
-          template: 'app/views/dialogTemplate.html',
-          className: 'ngdialog-theme-default',
-          overlay: true,
-          closeByEscape: true,
-          data: {
+        openDialog({
             headline: 'Success',
             message: 'Registration succeed'
-          }
         });
       },
       function (err) {
-        ngDialog.open({
-          template: 'app/views/dialogTemplate.html',
-          className: 'ngdialog-theme-default',
-          overlay: true,
-          closeByEscape: true,
-          data: {
+        openDialog({
             headline: 'Registration failed',
             message: err.data
-          }
         });
       }
     );
   };
+
+  function openDialog (dialogOptions) {
+    ngDialog.open({
+      template: 'app/views/dialogTemplate.html',
+      className: 'ngdialog-theme-default',
+      overlay: true,
+      closeByEscape: true,
+      data: {
+        headline: dialogOptions.headline,
+        message: dialogOptions.message
+      }
+    });
+  }
+
+  function setUserObject (userData) {
+    $rootScope.user = userData;
+
+    if (sessionStorage) {
+      sessionStorage.giantAppUser = JSON.stringify(userData);
+    }
+  }
 }]);

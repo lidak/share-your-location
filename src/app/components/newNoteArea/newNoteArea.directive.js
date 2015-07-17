@@ -17,7 +17,7 @@
     return directive;
 
     /** @ngInject */
-    function NewNoteController($scope) {
+    function NewNoteController($scope, $http) {
       var streamObj;
 
       function stopStream () {
@@ -110,7 +110,6 @@
           canvas.getContext('2d')
                 .drawImage(video, 0, 0, canvas.width, canvas.height);
 
-
           $scope.newNote.images.push({src: canvas.toDataURL()});
       };
 
@@ -130,12 +129,15 @@
         $scope.newNote.date = Date.now();
         $scope.newNote.show = true;
         $scope.notes.push($scope.newNote);
-        $scope.stopNewNoteCreation();
+
+        $http
+          .post('/createNote/' + $scope.user._id, $scope.newNote)
+          .then($scope.stopNewNoteCreation);
       };
 
       $scope.redirectToNotePage = function () {
         debugger
-      }
+      };
     }
   }
 })();
