@@ -29,7 +29,7 @@
       <input type="button" value="Cancel" ng-click="stopNewNoteCreation()" class="btn btn-default">
     </div>
   </form>
-  <div class="notes-map-wrapper">
+  <div class="notes-map-wrapper" ng-if="map">
     <ui-gmap-google-map center="map.center" zoom="map.zoom">
       <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="redirectToNotePage(m)" idkey="m.bid">
           <ui-gmap-window show="m.show" ng-click="redirectToNotePage(m)">

@@ -75,15 +75,15 @@ app.post('/createNote/:_id', function (req, res) {
       res.status(500).send('Server error.');
       return;
     }
+  });
+});
 
-/*    db.users.insert(req.body, function (err, doc) {
-      if (err) {
-        res.status(500).send('Server error.');
-        return;
-      }
-
-      res.status(200).json(doc);
-    });*/
+app.get('/getNotes/:_id', function (req, res) {
+  var id = req.params._id;
+  db.notes.findOne({_id: mongojs.ObjectId(id)}, function (err, doc) {
+    if(!err) {
+      res.json(doc.notes);
+    }
   });
 });
 

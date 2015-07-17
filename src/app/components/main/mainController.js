@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$http', 'ngDialog', function($rootScope, $scope, $http, ngDialog) {
-  $scope.notes = [];
   $scope.userAuthData = {};
   $rootScope.user = JSON.parse(sessionStorage.giantAppUser || '{}');
 

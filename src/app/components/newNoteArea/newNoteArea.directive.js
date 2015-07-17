@@ -1,143 +1,153 @@
-(function() {
-  'use strict';
+'use strict';
 
-  angular
-    .module('giant')
-    .directive('newNoteArea', newNoteArea);
+angular
+  .module('giant')
+  .directive('newNoteArea', newNoteArea);
+
+/** @ngInject */
+function newNoteArea() {
+  var directive = {
+    restrict: 'E',
+    templateUrl: 'app/components/newNoteArea/newNoteArea.html',
+    controller: NewNoteController,
+    bindToController: true
+  };
+
+  return directive;
 
   /** @ngInject */
-  function newNoteArea() {
-    var directive = {
-      restrict: 'E',
-      templateUrl: 'app/components/newNoteArea/newNoteArea.html',
-      controller: NewNoteController,
-      bindToController: true
+  function NewNoteController($scope, $http, $rootScope) {
+    var streamObj;
+
+    function stopStream () {
+      if (streamObj && streamObj.active) {
+        streamObj.stop();
+      }
+    }
+
+    $scope.map = null;
+
+    $scope.newNote = {
+      title: '',
+      images: [],
+      textContent: '',
+      coords: {
+        latitude: 50,
+        longitude: 20
+      },
+      date: ''
     };
 
-    return directive;
+    $scope.isAddPhotosViewVisible = false;
+    $scope.noteIsBeingCreated = false;
 
-    /** @ngInject */
-    function NewNoteController($scope, $http) {
-      var streamObj;
-
-      function stopStream () {
-        if (streamObj && streamObj.active) {
-          streamObj.stop();
-        }
+    $scope.videoStreamUrl = '';
+    $rootScope.$watch('user', function () {
+      if ($rootScope.user._id) {
+        $http
+          .get('/getNotes/' + ($rootScope.user._id))
+          .then(function (response) {
+            $rootScope.notes = response.data;
+            $scope.map = {
+              center: $scope.newNote.coords,
+              zoom: 12,
+              markers: $scope.notes,
+              markersEvents: {
+                click: function() {}
+              },
+              window: {
+                marker: {id:4},
+                show: true,
+                closeClick: function() {
+                  this.show = false;
+                },
+                options: {}
+            }
+          };
+        });
+      } else {
+        $rootScope.notes = [];
+        $scope.map = null;
       }
+    });
 
+    $scope.startNoteCreation = function () {
+      navigator.geolocation.getCurrentPosition(function (location) {
+        $scope.$apply(function () {
+          $scope.newNote.coords = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          };
+          $scope.newNote.bid = 4;
+          $scope.noteIsBeingCreated = true;
+        });
+      }, function(err) {
+        $scope.noteIsBeingCreated = false;
+      });
+    };
+
+    $scope.stopNewNoteCreation = function () {
       $scope.newNote = {
         title: '',
         images: [],
-        textContent: '',
-        coords: {
-          latitude: 50,
-          longitude: 20
-        },
-        date: ''
+        textContent: ''
       };
 
       $scope.isAddPhotosViewVisible = false;
       $scope.noteIsBeingCreated = false;
 
-      $scope.videoStreamUrl = '';
-      $scope.map = {
-        center: $scope.newNote.coords,
-        zoom: 12,
-        markers: $scope.notes, // array of models to display
-        markersEvents: {
-          click: function() {
-            debugger;
-          }
-        },
-        window: {
-            marker: {id:4},
-            show: true,
-            closeClick: function() {
-              this.show = false;
-            },
-            options: {} // define when map is ready
-        }
-      };
+      stopStream();
+    };
 
-      $scope.startNoteCreation = function () {
-        navigator.geolocation.getCurrentPosition(function (location) {
-          $scope.$apply(function () {
-            $scope.newNote.coords = {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude
-            };
-            $scope.newNote.bid = 4;
-            $scope.noteIsBeingCreated = true;
-          });
-        }, function(err) {
-          $scope.noteIsBeingCreated = false;
+    $scope.startVideo = function() {
+      navigator.webkitGetUserMedia({
+        video: true
+      }, function (stream) {
+        streamObj = stream;
+        $scope.$apply(function() {
+          $scope.isAddPhotosViewVisible = true;
+          $scope.videoStreamUrl = URL.createObjectURL(stream);
         });
-      };
+      }, function () {
 
-      $scope.stopNewNoteCreation = function () {
-        $scope.newNote = {
-          title: '',
-          images: [],
-          textContent: ''
-        };
+      });
+    };
 
-        $scope.isAddPhotosViewVisible = false;
-        $scope.noteIsBeingCreated = false;
+    $scope.makePhoto = function () {
+      var video = document.getElementById('video');
+      var canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d')
+              .drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        stopStream();
-      };
+        $scope.newNote.images.push({src: canvas.toDataURL()});
+    };
 
-      $scope.startVideo = function() {
-        navigator.webkitGetUserMedia({
-          video: true
-        }, function (stream) {
-          streamObj = stream;
-          $scope.$apply(function() {
-            $scope.isAddPhotosViewVisible = true;
-            $scope.videoStreamUrl = URL.createObjectURL(stream);
-          });
-        }, function () {
+    $scope.cancelPhotosMake = function () {
+      $scope.newNote.images = [];
+      $scope.isAddPhotosViewVisible = false;
 
-        });
-      };
+      stopStream();
+    };
 
-      $scope.makePhoto = function () {
-        var video = document.getElementById('video');
-        var canvas = document.createElement('canvas');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          canvas.getContext('2d')
-                .drawImage(video, 0, 0, canvas.width, canvas.height);
+    $scope.removeImage = function (img) {
+      var images = $scope.newNote.images;
+      images.splice(images.indexOf(img), 1);
+    };
 
-          $scope.newNote.images.push({src: canvas.toDataURL()});
-      };
+    $scope.createNewNote = function () {
+      $scope.newNote.date = Date.now();
+      $scope.newNote.show = true;
+      $scope.notes.push($scope.newNote);
 
-      $scope.cancelPhotosMake = function () {
-        $scope.newNote.images = [];
-        $scope.isAddPhotosViewVisible = false;
+      $http
+        .post('/createNote/' + $scope.user._id, $scope.newNote)
+        .then($scope.stopNewNoteCreation);
+    };
 
-        stopStream();
-      };
-
-      $scope.removeImage = function (img) {
-        var images = $scope.newNote.images;
-        images.splice(images.indexOf(img), 1);
-      };
-
-      $scope.createNewNote = function () {
-        $scope.newNote.date = Date.now();
-        $scope.newNote.show = true;
-        $scope.notes.push($scope.newNote);
-
-        $http
-          .post('/createNote/' + $scope.user._id, $scope.newNote)
-          .then($scope.stopNewNoteCreation);
-      };
-
-      $scope.redirectToNotePage = function () {
-        debugger
-      };
-    }
+    $scope.redirectToNotePage = function () {
+      debugger
+    };
   }
-})();
+}
