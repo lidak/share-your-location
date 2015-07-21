@@ -71,7 +71,6 @@ app.post('/createNote/:userId', function (req, res) {
         res.json(doc);
       });
     } else {
-      var newNotes = doc.notes.push(req.body);
       db.notes.update({
         userId: id
       }, {
