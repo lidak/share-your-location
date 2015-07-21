@@ -2,6 +2,7 @@
   "globals": {
     "angular": true,
     "require": true,
-    "__dirname": true
+    "__dirname": true,
+    "process": true
   }
 }
