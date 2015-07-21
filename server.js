@@ -3,7 +3,7 @@
 var express = require('express'),
   app = express(),
   mongojs = require('mongojs'),
-  db = mongojs('giant', ['users', 'notes']),
+  db = mongojs('mongodb://animatio:33_Korovi@ds059692.mongolab.com:59692/giant', ['users', 'notes']),
   parser = require('body-parser');
 
 app.use(express.static(__dirname + '/src'));
