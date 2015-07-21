@@ -147,7 +147,6 @@ function newNoteArea() {
     };
 
     $scope.redirectToNotePage = function () {
-      debugger
     };
   }
 }
