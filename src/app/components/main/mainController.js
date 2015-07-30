@@ -5,6 +5,9 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
   $rootScope.user = JSON.parse(sessionStorage.giantAppUser || '{}');
 
   $scope.logIn = function () {
+
+    $rootScope.showSpinner = true;
+
     $http.post('/auth', $scope.userAuthData).then(
       function (user) {
         setUserObject(user.data);
@@ -20,7 +23,10 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
             message: err.data
         });
       }
-    );
+    )
+    .finally(function () {
+      $rootScope.showSpinner = false;
+    });
   };
 
   $scope.logOut = function () {
@@ -28,6 +34,7 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
   };
 
   $scope.signUp = function () {
+    $rootScope.showSpinner = true;
     $http.post('/register', $scope.userAuthData).then(
       function (user) {
         setUserObject(user.data);
@@ -43,7 +50,9 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
             message: err.data
         });
       }
-    );
+    ).finally(function () {
+      $rootScope.showSpinner = false;
+    });
   };
 
   function openDialog (dialogOptions) {

@@ -1,0 +1,56 @@
+.cssload-wrapper {
+  position: fixed;
+  z-index: 998;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.cssload-container {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.cssload-double-torus {
+  width: 49px;
+  height: 49px;
+  margin: 0 auto;
+  border: 4px double;
+  border-radius: 50%;
+  border-color: transparent rgba(250,250,250,0.9) rgba(250,250,250,0.9);
+  animation: cssload-spin 690ms infinite linear;
+    -o-animation: cssload-spin 690ms infinite linear;
+    -ms-animation: cssload-spin 690ms infinite linear;
+    -webkit-animation: cssload-spin 690ms infinite linear;
+    -moz-animation: cssload-spin 690ms infinite linear;
+}
+
+
+
+@keyframes cssload-spin {
+  100%{ transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-o-keyframes cssload-spin {
+  100%{ -o-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-ms-keyframes cssload-spin {
+  100%{ -ms-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-webkit-keyframes cssload-spin {
+  100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-moz-keyframes cssload-spin {
+  100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
+}

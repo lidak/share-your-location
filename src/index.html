@@ -10,6 +10,7 @@
     <app-header></app-header>
     <new-note-area ng-if="user._id"></new-note-area>
     <default-home-page ng-if="!user._id"></default-home-page>
+    <load-spinner></load-spinner>
   </body>
   <!--Libraries-->
   <script src="libs/node_modules/angular/angular.js"></script>
@@ -24,4 +25,5 @@
   <script src="app/components/defaultHomePage/defaultHomePage.directive.js"></script>
   <script src="app/components/header/appHeader.directive.js"></script>
   <script src="app/components/newNoteArea/newNoteArea.directive.js"></script>
+  <script src="app/components/loadSpinner/loadSpinner.directive.js"></script>
 </html>
