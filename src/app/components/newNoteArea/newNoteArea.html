@@ -29,17 +29,25 @@
       <input type="button" value="Cancel" ng-click="stopNewNoteCreation()" class="btn btn-default">
     </div>
   </form>
-  <div class="notes-map-wrapper" ng-if="map">
-    <ui-gmap-google-map center="map.center" zoom="map.zoom">
-      <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="redirectToNotePage(m)" idkey="m.bid">
-          <ui-gmap-window show="m.show" ng-click="redirectToNotePage(m)">
-              <p>
-                  <img ng-src="{{ m.images[0].src }}" alt="" class="tooltip-img">
-                  Title: {{m.title}}<br/>
-                  Text: {{m.textContent}}<br/>
-              </p>
-          </ui-gmap-window>
-      </ui-gmap-marker>
-    </ui-gmap-google-map>
+  <div class="map-area" ng-if="map">
+    <div class="row">
+      <aside class="col-sm-12 col-md-3">
+        <h4>Filter your notes</h4>
+      </aside>
+      <div class="notes-map-wrapper col-sm-12 col-md-9">
+        <ui-gmap-google-map center="map.center" zoom="map.zoom">
+          <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="redirectToNotePage(m)" idkey="m.bid">
+              <ui-gmap-window show="m.show" ng-click="redirectToNotePage(m)">
+                  <p>
+                      <img ng-src="{{ m.images[0].src }}" alt="" class="tooltip-img">
+                      Title: {{m.title}}<br/>
+                      Text: {{m.textContent}}<br/>
+                  </p>
+              </ui-gmap-window>
+          </ui-gmap-marker>
+        </ui-gmap-google-map>
+      </div>
+    </div>
   </div>
+  
 </div>
