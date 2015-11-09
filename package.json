@@ -8,11 +8,13 @@
     "grunt-connect": "^0.2.0",
     "grunt-contrib-less": "^1.0.1",
     "grunt-contrib-watch": "^0.6.1",
+    "gulp-nodemon": "^2.0.4",
     "jit-grunt": "^0.9.1",
     "mongojs": "^1.0.2"
   },
   "dependencies": {
-    "express": "^4.13.1"
+    "express": "^4.13.1",
+    "gulp": "^3.9.0"
   },
   "engines": {
     "node": "0.12.2"

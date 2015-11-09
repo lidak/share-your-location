@@ -3,7 +3,7 @@
 var express = require('express'),
   app = express(),
   mongojs = require('mongojs'),
-  db = mongojs('mongodb://animatio:33_Korovi@ds059692.mongolab.com:59692/giant', ['users', 'notes']),
+  db = mongojs('giant', ['users', 'notes']),
   parser = require('body-parser');
 
 app.use(express.static(__dirname + '/src'));
@@ -38,11 +38,13 @@ app.post('/register', function (req, res) {
     }
 
     if (err) {
+      console.log(err);
       res.status(500).send('Server error.');
       return;
     }
 
     db.users.insert(req.body, function (err, doc) {
+      console.log(err);
       if (err) {
         res.status(500).send('Server error.');
         return;
@@ -110,4 +112,4 @@ app.get('/getNotes/:userId', function (req, res) {
   });
 });
 
-app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT || 4000);
