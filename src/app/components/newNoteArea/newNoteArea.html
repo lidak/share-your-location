@@ -31,9 +31,7 @@
   </form>
   <div class="map-area" ng-if="map">
     <div class="row">
-      <aside class="col-sm-12 col-md-3">
-        <h4>Filter your notes</h4>
-      </aside>
+      <notes-filter></notes-filter>
       <div class="notes-map-wrapper col-sm-12 col-md-9">
         <ui-gmap-google-map center="map.center" zoom="map.zoom">
           <ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" click="redirectToNotePage(m)" idkey="m.bid">

@@ -4,58 +4,59 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
   $scope.userAuthData = {};
   $rootScope.user = JSON.parse(sessionStorage.giantAppUser || '{}');
 
-  $scope.logIn = function () {
+  $scope.logIn = function() {
 
     $rootScope.showSpinner = true;
 
     $http.post('/auth', $scope.userAuthData).then(
-      function (user) {
-        setUserObject(user.data);
+        function(user) {
+          setUserObject(user.data);
 
-        openDialog({
+          openDialog({
             headline: 'Success',
             message: 'You have been successfully logged in'
-        });
-      },
-      function (err) {
-        openDialog({
+          });
+        },
+        function(err) {
+          openDialog({
             headline: 'Login failed',
             message: err.data
-        });
-      }
-    )
-    .finally(function () {
-      $rootScope.showSpinner = false;
-    });
+          });
+        }
+      )
+      .finally(function() {
+        $rootScope.showSpinner = false;
+      });
   };
 
-  $scope.logOut = function () {
+  $scope.logOut = function() {
     setUserObject({});
   };
 
-  $scope.signUp = function () {
+  $scope.signUp = function() {
     $rootScope.showSpinner = true;
     $http.post('/register', $scope.userAuthData).then(
-      function (user) {
+      function(user) {
         setUserObject(user.data);
 
         openDialog({
-            headline: 'Success',
-            message: 'Registration succeed'
+          headline: 'Success',
+          message: 'Registration succeed'
         });
       },
-      function (err) {
+      function(err) {
         openDialog({
-            headline: 'Registration failed',
-            message: err.data
+          headline: 'Registration failed',
+          message: err.data
         });
       }
-    ).finally(function () {
+    ).finally(function() {
       $rootScope.showSpinner = false;
     });
   };
 
-  function openDialog (dialogOptions) {
+  //Place this into service
+  function openDialog(dialogOptions) {
     ngDialog.open({
       template: 'app/views/dialogTemplate.html',
       className: 'ngdialog-theme-default',
@@ -68,7 +69,9 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
     });
   }
 
-  function setUserObject (userData) {
+  $rootScope.openDialog = openDialog;
+
+  function setUserObject(userData) {
     $rootScope.user = userData;
 
     if (sessionStorage) {

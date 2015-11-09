@@ -1,0 +1,10 @@
+<!-- Create share class to center content -->
+<div class="new-note-area">
+  <h2>Search</h2>
+  <div class="selected-user" ng-if="selectedUser.userName.length">
+    <div>{{selectedUser.userName}}</div>
+    <button class="btn btn-info" ng-click="watchUsersNotes()">Watch his notes.</button>
+  </div>
+  <input type="text" placeholder="Enter something..." ng-model="nameToSearch" ng-change="sendNamesRequest()">
+  <select id="" class="user-suggestions" ng-options="user.userName for user in usersCollection" ng-model="selectedUser" ng-change="newUserSelected()"></select>
+</div>

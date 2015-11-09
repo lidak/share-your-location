@@ -4,7 +4,8 @@ var express = require('express'),
   app = express(),
   mongojs = require('mongojs'),
   db = mongojs('giant', ['users', 'notes']),
-  parser = require('body-parser');
+  parser = require('body-parser'),
+  ObjectId = mongojs.ObjectId;
 
 app.use(express.static(__dirname + '/src'));
 app.use(parser.json({limit: '50mb'}));
@@ -109,6 +110,75 @@ app.get('/getNotes/:userId', function (req, res) {
     } else {
       res.json([]);
     }
+  });
+});
+
+app.get('/getUsersByPartOfName/:namePart', function (req, res) {
+  var patternToMatch = new RegExp(req.params.namePart),
+    dataToReturn;
+
+  db.users.find({userName: {$regex: patternToMatch}}, function (err, docs) {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+
+    dataToReturn = docs.map(function(userItem) {
+      return {
+        _id: userItem._id,
+        userName: userItem.userName
+      };
+    });
+
+    res.json(dataToReturn);
+  });
+});
+
+app.put('/subscribeForNotes', function (req, res) {
+  db.users.update({
+      _id: ObjectId(req.body.currentUser)
+    }, {
+      $push: {watchedIDs: req.body.subscribeFor}
+    }, function (err, msg) {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+
+      if (msg.nModified >= 1) {
+        res.status(200).send('Subscription added!!!');
+      } else  {
+        res.status(505).send('Please try later.');
+      }
+  });
+});
+
+app.get('/watchedNotes/:userId', function (req, res) {
+  var currentUserId = req.params.userId,
+    watchedIDs,
+    watchedObjectIds;
+
+  db.users.findOne({_id: ObjectId(currentUserId)}, function (err, doc) {
+    if(err) {
+      return res.status(500).send('Server error.');
+    }
+
+    watchedIDs = doc.watchedIDs || [];
+    watchedObjectIds = watchedIDs.map(function(item) {
+      return ObjectId(item);
+    });
+
+    console.log(watchedIDs)
+    db.notes.find({
+      userId: {
+        $in: doc.watchedIDs
+      }
+    }, function (err, docs) {
+        if(err) {
+          return res.status(500).send('Server error.');
+        }
+        res.status(200).send(docs);
+    });
   });
 });
 

@@ -1,0 +1,9 @@
+<aside class="col-sm-12 col-md-3">
+  <h4>Filter your notes</h4>
+  <div>
+    <div ng-repeat="user in users">
+      <input type="checkbox" id="{{user._id}}">
+      <label for="{{user._id}}">{{user.name}}</label>
+    </div>
+  </div>
+</aside>

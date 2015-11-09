@@ -8,6 +8,7 @@
   </head>
   <body ng-controller="MainController">
     <app-header></app-header>
+    <search-for-giants></search-for-giants>
     <new-note-area ng-if="user._id"></new-note-area>
     <default-home-page ng-if="!user._id"></default-home-page>
     <load-spinner></load-spinner>
@@ -24,6 +25,8 @@
   <script src="app/components/main/mainController.js"></script>
   <script src="app/components/defaultHomePage/defaultHomePage.directive.js"></script>
   <script src="app/components/header/appHeader.directive.js"></script>
+  <script src="app/components/notesFilter/notesFilter.directive.js"></script>
+  <script src="app/components/searchForGiants/searchForGiants.directive.js"></script>
   <script src="app/components/newNoteArea/newNoteArea.directive.js"></script>
   <script src="app/components/loadSpinner/loadSpinner.directive.js"></script>
 </html>
