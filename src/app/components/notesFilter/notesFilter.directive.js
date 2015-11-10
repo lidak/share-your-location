@@ -13,11 +13,11 @@ function notesFilter () {
   };
 }
 
-function notesFilterController ($scope, $http, $rootScope, ngDialog) {
+function notesFilterController ($scope, $http, $rootScope) {
   function loadWatchedNotes () {
     $http.get('/watchedNotes/' + $rootScope.user._id)
-      .success(function() {
-
+      .success(function(users) {
+        $scope.users = users;
       })
       .error(function() {
         $scope.openDialog({

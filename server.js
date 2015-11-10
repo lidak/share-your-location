@@ -56,45 +56,56 @@ app.post('/register', function (req, res) {
   });
 });
 
-
+//ToDO: Rewrite this fucking callback-hell
 app.post('/createNote/:userId', function (req, res) {
-  var id = req.params.userId;
+  var id = req.params.userId,
+    userName;
 
-  db.notes.findOne({userId: id}, function (err, doc) {
-    if (!doc) {
-      db.notes.insert({
-        userId: id,
-        notes: [req.body]
-      }, function (err, doc) {
-        if (err) {
-          res.status(500).send('Server error.');
-          return;
-        }
-
-        res.json(doc);
-      });
-    } else {
-      db.notes.update({
-        userId: id
-      }, {
-        $push: {
-          'notes': req.body
-        }
-      },
-      function (err, doc) {
-        if (err) {
-          res.status(500).send('Server error.');
-          return;
-        }
-
-        res.json(doc);
-      });
-    }
-
+  db.users.findOne({_id: ObjectId(id)}, function (err, doc) {
     if (err) {
-      res.status(500).send('Server error.');
+      res.status(500).send('Can not find name for user.');
       return;
     }
+
+    userName = doc.userName;
+
+    db.notes.findOne({userId: id}, function (err, doc) {
+      if (!doc) {
+        db.notes.insert({
+          userId: id,
+          userName: userName,
+          notes: [req.body]
+        }, function (err, doc) {
+          if (err) {
+            res.status(500).send('Server error.');
+            return;
+          }
+
+          res.json(doc);
+        });
+      } else {
+        db.notes.update({
+          userId: id
+        }, {
+          $push: {
+            'notes': req.body
+          }
+        },
+        function (err, doc) {
+          if (err) {
+            res.status(500).send('Server error.');
+            return;
+          }
+
+          res.json(doc);
+        });
+      }
+
+      if (err) {
+        res.status(500).send('Server error.');
+        return;
+      }
+    });
   });
 });
 
@@ -155,23 +166,19 @@ app.put('/subscribeForNotes', function (req, res) {
 
 app.get('/watchedNotes/:userId', function (req, res) {
   var currentUserId = req.params.userId,
-    watchedIDs,
-    watchedObjectIds;
+    watchedIDs;
 
   db.users.findOne({_id: ObjectId(currentUserId)}, function (err, doc) {
     if(err) {
       return res.status(500).send('Server error.');
     }
 
-    watchedIDs = doc.watchedIDs || [];
-    watchedObjectIds = watchedIDs.map(function(item) {
-      return ObjectId(item);
-    });
-
-    console.log(watchedIDs)
+    watchedIDs = doc ? doc.watchedIDs : [];
+    // Currently, if user haven't create any notes he can not be found in notes database.
+    // Do something with that motherfucker.
     db.notes.find({
       userId: {
-        $in: doc.watchedIDs
+        $in: watchedIDs
       }
     }, function (err, docs) {
         if(err) {
