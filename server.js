@@ -66,7 +66,6 @@ app.post('/createNote/:userId', function (req, res) {
         callback(null, doc);
       });
     },
-
     function (doc, callback) {
       notes.update({
         userId: id,
