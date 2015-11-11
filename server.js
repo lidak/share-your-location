@@ -64,33 +64,33 @@ app.post('/createNote/:userId', function (req, res) {
   var id = req.params.userId,
     userName;
 
-  users.findOne({_id: makeObjectId(id)}, function (err, doc) {
-    if (err) {
-      res.status(500).send('Can not find name for user.');
-      return;
-    }
+  async.waterfall([
+    function (callback) {
+      users.findOne({_id: makeObjectId(id)}, function (err, doc) {
+        callback(null, doc);
+      });
+    },
 
-    userName = doc.userName;
-
-    notes.update({
-      userId: id,
-    }, {
-      $set: {
+    function (doc, callback) {
+      notes.update({
         userId: id,
-        userName: userName
-      },
-      $push: {
-        notes: req.body
-      }
-    }, {
-      upsert: true
-    }, function (err, doc) {
-      if (err) {
-        return res.status(500).send('Error during inserting the note');
-      }
-
-      res.status(200).send(doc);
-    });
+      }, {
+        $set: {
+          userId: id,
+          userName: userName
+        },
+        $push: {
+          notes: req.body
+        }
+      }, {
+        upsert: true
+      }, callback);
+    }
+  ], function (err, doc) {
+    if (err) {
+      return res.status(500).send('Error during inserting the note');
+    }
+    res.status(200).send(doc);
   });
 });
 
