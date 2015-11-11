@@ -55,7 +55,7 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
     });
   };
 
-  //Place this into service
+  //ToDo: Place this into service.
   function openDialog(dialogOptions) {
     ngDialog.open({
       template: 'app/views/dialogTemplate.html',

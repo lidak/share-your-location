@@ -1,18 +1,21 @@
 'use strict';
 
 var express = require('express'),
-  app = express(),
   mongojs = require('mongojs'),
-  db = mongojs('giant', ['users', 'notes']),
   parser = require('body-parser'),
-  ObjectId = mongojs.ObjectId;
+  async = require('async'),
+  db = mongojs('giant', ['users', 'notes']),
+  app = express(),
+  users = db.users,
+  notes = db.notes,
+  makeObjectId = mongojs.ObjectId;
 
 app.use(express.static(__dirname + '/src'));
 app.use(parser.json({limit: '50mb'}));
 app.use(parser.urlencoded({limit: '50mb', extended: true}));
 
 app.post('/auth', function (req, res) {
-  db.users.findOne({userName: req.body.userName}, function (err, doc) {
+  users.findOne({userName: req.body.userName}, function (err, doc) {
     if (!doc) {
       res.status(400).send('User with this name can not be found.');
       return;
@@ -32,7 +35,7 @@ app.post('/auth', function (req, res) {
 });
 
 app.post('/register', function (req, res) {
-  db.users.findOne({userName: req.body.userName}, function (err, doc) {
+  users.findOne({userName: req.body.userName}, function (err, doc) {
     if (doc) {
       res.status(400).send('User with this name already exists.');
       return;
@@ -44,7 +47,7 @@ app.post('/register', function (req, res) {
       return;
     }
 
-    db.users.insert(req.body, function (err, doc) {
+    users.insert(req.body, function (err, doc) {
       console.log(err);
       if (err) {
         res.status(500).send('Server error.');
@@ -61,7 +64,7 @@ app.post('/createNote/:userId', function (req, res) {
   var id = req.params.userId,
     userName;
 
-  db.users.findOne({_id: ObjectId(id)}, function (err, doc) {
+  users.findOne({_id: makeObjectId(id)}, function (err, doc) {
     if (err) {
       res.status(500).send('Can not find name for user.');
       return;
@@ -69,50 +72,33 @@ app.post('/createNote/:userId', function (req, res) {
 
     userName = doc.userName;
 
-    db.notes.findOne({userId: id}, function (err, doc) {
-      if (!doc) {
-        db.notes.insert({
-          userId: id,
-          userName: userName,
-          notes: [req.body]
-        }, function (err, doc) {
-          if (err) {
-            res.status(500).send('Server error.');
-            return;
-          }
-
-          res.json(doc);
-        });
-      } else {
-        db.notes.update({
-          userId: id
-        }, {
-          $push: {
-            'notes': req.body
-          }
-        },
-        function (err, doc) {
-          if (err) {
-            res.status(500).send('Server error.');
-            return;
-          }
-
-          res.json(doc);
-        });
+    notes.update({
+      userId: id,
+    }, {
+      $set: {
+        userId: id,
+        userName: userName
+      },
+      $push: {
+        notes: req.body
       }
-
+    }, {
+      upsert: true
+    }, function (err, doc) {
       if (err) {
-        res.status(500).send('Server error.');
-        return;
+        return res.status(500).send('Error during inserting the note');
       }
+
+      res.status(200).send(doc);
     });
   });
 });
 
 app.get('/getNotes/:userId', function (req, res) {
   var id = req.params.userId;
-  db.notes.findOne({userId: id}, function (err, doc) {
+  notes.findOne({userId: id}, function (err, doc) {
     if (err) {
+
       res.status(500).send('Server error.');
       return;
     }
@@ -128,7 +114,7 @@ app.get('/getUsersByPartOfName/:namePart', function (req, res) {
   var patternToMatch = new RegExp(req.params.namePart),
     dataToReturn;
 
-  db.users.find({userName: {$regex: patternToMatch}}, function (err, docs) {
+  users.find({userName: {$regex: patternToMatch}}, function (err, docs) {
     if (err) {
       res.status(500).send(err);
       return;
@@ -146,8 +132,8 @@ app.get('/getUsersByPartOfName/:namePart', function (req, res) {
 });
 
 app.put('/subscribeForNotes', function (req, res) {
-  db.users.update({
-      _id: ObjectId(req.body.currentUser)
+  users.update({
+      _id: makeObjectId(req.body.currentUser)
     }, {
       $push: {watchedIDs: req.body.subscribeFor}
     }, function (err, msg) {
@@ -168,7 +154,7 @@ app.get('/watchedNotes/:userId', function (req, res) {
   var currentUserId = req.params.userId,
     watchedIDs;
 
-  db.users.findOne({_id: ObjectId(currentUserId)}, function (err, doc) {
+  users.findOne({_id: makeObjectId(currentUserId)}, function (err, doc) {
     if(err) {
       return res.status(500).send('Server error.');
     }
@@ -176,7 +162,7 @@ app.get('/watchedNotes/:userId', function (req, res) {
     watchedIDs = doc ? doc.watchedIDs : [];
     // Currently, if user haven't create any notes he can not be found in notes database.
     // Do something with that motherfucker.
-    db.notes.find({
+    notes.find({
       userId: {
         $in: watchedIDs
       }
