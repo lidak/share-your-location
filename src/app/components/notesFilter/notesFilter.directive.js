@@ -13,14 +13,15 @@ function notesFilter () {
   };
 }
 
-function notesFilterController ($scope, $http, $rootScope) {
+function notesFilterController ($scope, $http, $rootScope, openDialog) {
   function loadWatchedNotes () {
     $http.get('/watchedNotes/' + $rootScope.user._id)
       .success(function(users) {
+        debugger
         $scope.users = users;
       })
       .error(function() {
-        $scope.openDialog({
+        openDialog({
           headline: 'Fail',
           message: 'Can\'t load notes'
         });

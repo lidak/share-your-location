@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$http', 'ngDialog', function($rootScope, $scope, $http, ngDialog) {
+angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$http', 'openDialog', function($rootScope, $scope, $http, openDialog) {
   $scope.userAuthData = {};
   $rootScope.user = JSON.parse(sessionStorage.giantAppUser || '{}');
 
@@ -54,22 +54,6 @@ angular.module('giant').controller('MainController', ['$rootScope', '$scope', '$
       $rootScope.showSpinner = false;
     });
   };
-
-  //ToDo: Place this into service.
-  function openDialog(dialogOptions) {
-    ngDialog.open({
-      template: 'app/views/dialogTemplate.html',
-      className: 'ngdialog-theme-default',
-      overlay: true,
-      closeByEscape: true,
-      data: {
-        headline: dialogOptions.headline,
-        message: dialogOptions.message
-      }
-    });
-  }
-
-  $rootScope.openDialog = openDialog;
 
   function setUserObject(userData) {
     $rootScope.user = userData;

@@ -13,10 +13,12 @@ function searchForGiants () {
   };
 }
 
-function searchController ($scope, $http, $rootScope) {
+function searchController ($scope, $http, $rootScope, openDialog) {
   var urlToGetNames = '/getUsersByPartOfName',
     urlToSubscribe = '/subscribeForNotes';
-  $scope.selectedUser = {};
+  $scope.selectedUser = {
+    _id: ''
+  };
   $scope.nameToSearch  ='';
   $scope.usersCollection = [];
 
@@ -30,6 +32,7 @@ function searchController ($scope, $http, $rootScope) {
 
   function sendNamesRequest() {
     if(!$scope.nameToSearch.length) {
+      $scope.usersCollection = [];
       return;
     }
 
@@ -47,7 +50,7 @@ function searchController ($scope, $http, $rootScope) {
       currentUser: $rootScope.user._id,
       subscribeFor: $scope.selectedUser._id
     }).success(function() {
-      $rootScope.openDialog({
+      openDialog({
         headline: 'Success',
         message: 'You succesfully subscribed.'
       });

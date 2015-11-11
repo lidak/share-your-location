@@ -57,10 +57,8 @@ app.post('/register', function (req, res) {
   });
 });
 
-//ToDO: Rewrite this fucking callback-hell
 app.post('/createNote/:userId', function (req, res) {
-  var id = req.params.userId,
-    userName;
+  var id = req.params.userId;
 
   async.waterfall([
     function (callback) {
@@ -75,7 +73,7 @@ app.post('/createNote/:userId', function (req, res) {
       }, {
         $set: {
           userId: id,
-          userName: userName
+          userName: doc.userName
         },
         $push: {
           notes: req.body

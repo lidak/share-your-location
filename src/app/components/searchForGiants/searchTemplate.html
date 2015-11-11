@@ -6,5 +6,8 @@
     <button class="btn btn-info" ng-click="watchUsersNotes()">Watch his notes.</button>
   </div>
   <input type="text" placeholder="Enter something..." ng-model="nameToSearch" ng-change="sendNamesRequest()">
-  <select id="" class="user-suggestions" ng-options="user.userName for user in usersCollection" ng-model="selectedUser" ng-change="newUserSelected()"></select>
+  <div class="search-results-block">
+    <select id="" class="user-suggestions" ng-options="user.userName for user in usersCollection track by user._id" ng-model="selectedUser" ng-change="newUserSelected()" size="5" ng-show="usersCollection.length"></select>
+    <span ng-if="nameToSearch.length && !usersCollection.length">Nothing is found</span>
+  </div>
 </div>
