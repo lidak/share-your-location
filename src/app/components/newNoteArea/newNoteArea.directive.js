@@ -47,7 +47,6 @@ function newNoteArea() {
         $http
           .get('/getNotes/' + ($rootScope.user._id))
           .then(function (response) {
-            debugger
             $scope.notes = response.data;
             $scope.map = {
               center: $scope.newNote.coords,

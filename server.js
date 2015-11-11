@@ -42,13 +42,11 @@ app.post('/register', function (req, res) {
     }
 
     if (err) {
-      console.log(err);
       res.status(500).send('Server error.');
       return;
     }
 
     users.insert(req.body, function (err, doc) {
-      console.log(err);
       if (err) {
         res.status(500).send('Server error.');
         return;
@@ -154,24 +152,26 @@ app.get('/watchedNotes/:userId', function (req, res) {
   var currentUserId = req.params.userId,
     watchedIDs;
 
-  users.findOne({_id: makeObjectId(currentUserId)}, function (err, doc) {
-    if(err) {
-      return res.status(500).send('Server error.');
-    }
-
-    watchedIDs = doc ? doc.watchedIDs : [];
-    // Currently, if user haven't create any notes he can not be found in notes database.
-    // Do something with that motherfucker.
-    notes.find({
-      userId: {
-        $in: watchedIDs
-      }
-    }, function (err, docs) {
-        if(err) {
-          return res.status(500).send('Server error.');
+  async.waterfall([
+    function (callback) {
+      users.findOne({_id: makeObjectId(currentUserId)}, function (err, doc) {
+        watchedIDs = doc && doc.watchedIDs ? doc.watchedIDs : [];
+        callback(null, watchedIDs);
+      });
+    },
+    function (idsArray, callback) {
+      notes.find({
+        userId: {
+          $in: watchedIDs
         }
-        res.status(200).send(docs);
-    });
+      }, callback);
+    }
+  ],
+  function (err, docs) {
+      if(err) {
+        return res.status(500).send('Server error.');
+      }
+      res.status(200).send(docs);
   });
 });
 

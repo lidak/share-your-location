@@ -13,8 +13,8 @@ function searchForGiants () {
   };
 }
 
-function searchController ($scope, $http, $rootScope, ngDialog) {
-  var urlToGetNames = '/getUsersByPartOfName/',
+function searchController ($scope, $http, $rootScope) {
+  var urlToGetNames = '/getUsersByPartOfName',
     urlToSubscribe = '/subscribeForNotes';
   $scope.selectedUser = {};
   $scope.nameToSearch  ='';
@@ -29,12 +29,16 @@ function searchController ($scope, $http, $rootScope, ngDialog) {
   }
 
   function sendNamesRequest() {
-    $http.get(urlToGetNames + $scope.nameToSearch)
+    if(!$scope.nameToSearch.length) {
+      return;
+    }
+
+    $http.get(urlToGetNames + '/' + $scope.nameToSearch)
       .success(function (data) {
         $scope.usersCollection = data;
       })
       .error(function (err) {
-        console.log('ololo');
+        console.log(err);
       });
   }
 
